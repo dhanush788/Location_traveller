@@ -82,8 +82,9 @@ const Button = ({ closed, category, setCategory, setClosed }) => {
       </motion.div>
       <motion.div className='absolute w-full bg-[#EB4E4E] rounded-full p-5 flex flex-row items-center justify-center'
         initial={{ x: '100%', opacity: 100 }}
-        animate={{ x: (closed && category === 'Delete route') ? '0%' : '100%' }}
-        transition={{ duration: 0.5 }}>
+        animate={{ x: (closed && category === 'Delete route') ? '0%' : ((category === 'Deleted') ? '-100%' :'100%') }}
+        transition={{ duration: 0.5 }}
+        onClick={() => setCategory('Deleted')}>
         <p className='text-[#22242B] font-bold text-lg'>Delete</p>
       </motion.div>
       <motion.div className='absolute w-full bg-[#B97FFF] rounded-full p-5 flex flex-row items-center justify-center'
@@ -94,7 +95,7 @@ const Button = ({ closed, category, setCategory, setClosed }) => {
       </motion.div>
       <motion.div className='absolute w-full flex flex-row items-center justify-between gap-3'
         initial={{ x: '100%', opacity: 100 }}
-        animate={{ x: (closed && category === 'Route Setting') ? '0%' : (((category === 'Delete route' || category === 'Save route' || category === 'Load route') && closed) ? '-100%' : '100%') }}
+        animate={{ x: (closed && category === 'Route Setting') ? '0%' : (((category === 'Delete route' || category === 'Save route' || category === 'Load route' || category === 'Deleted' || category === 'Ss') && closed) ? '-100%' : '100%') }}
         transition={{ duration: 0.5 }}>
         <div className='flex flex-1 p-5 bg-[#EB4E4E] text-[#22242B] font-bold text-base rounded-full justify-center' onClick={() => setCategory('Delete route')}>Delete</div>
         <div className='flex flex-1 p-5 bg-[#2B2C2F] bg-opacity-80 text-white font-bold text-base rounded-full justify-center' onClick={() => setCategory('Save route')}>Save</div>
@@ -151,6 +152,11 @@ const Body = ({ category }) => {
 
         </div>
       )}
+      {category === 'Delete route' && (
+        <div className='pb-3 flex flex-row gap-3'>
+          <p className='text-white mx-auto text-3xl !font-thin'>ARE YOU SURE?</p>
+        </div>
+      )}
       {category === 'Show location' && (
         <div className='flex flex-col gap-2 h-[60vh] mx-5'>
           {trip.map((item, index) => (
@@ -181,14 +187,13 @@ function App() {
 
   const [closed, setClosed] = React.useState(false);
   const [category, setCategory] = React.useState('Route Setting')
-  const maxHeight = category === 'Save route' || category === 'Load route' || category === 'Show location' ? '90vh' : '50vh';
+  const maxHeight = category === 'Save route' || category === 'Load route' || category === 'Show location' || category === 'Map style' || category === 'Delete route' ? '90vh' : '30vh';
 
 
   return (
     <div className="bg-cover bg-center h-screen " style={{ backgroundImage: `url(${map})` }}>
       <div className="relative h-full">
         <motion.div
-          key={category}
           className="absolute bottom-0 w-screen pb-8"
           style={{
             background: 'linear-gradient(to right, #131418 0%, #000000 96%)',
@@ -196,7 +201,7 @@ function App() {
           initial={{ maxHeight: '30vh' }}
           animate={{ maxHeight }}
           exit={{ maxHeight: '30vh' }}
-          transition={{ duration: 0.8, ease: 'easeInOut' }}
+          transition={{ type: 'keyframes', duration: 0.8, ease: 'easeInOut' }}
         >
           <div className='w-14 pb-2 bg-[#35383F] mx-auto rounded-b-full' />
           <Header closed={closed} setClosed={setClosed} category={category} setCategory={setCategory} />
