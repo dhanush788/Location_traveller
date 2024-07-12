@@ -181,17 +181,22 @@ function App() {
 
   const [closed, setClosed] = React.useState(false);
   const [category, setCategory] = React.useState('Route Setting')
+  const maxHeight = category === 'Save route' || category === 'Load route' || category === 'Show location' ? '90vh' : '50vh';
+
 
   return (
     <div className="bg-cover bg-center h-screen " style={{ backgroundImage: `url(${map})` }}>
       <div className="relative h-full">
         <motion.div
+          key={category}
           className="absolute bottom-0 w-screen pb-8"
           style={{
             background: 'linear-gradient(to right, #131418 0%, #000000 96%)',
-            maxHeight: category === 'Save route' || category === 'Load route' || category === 'Show location' ? '90vh' : '50vh',
-            transition: 'max-height height 0.8s ease-in-out',
           }}
+          initial={{ maxHeight: '30vh' }}
+          animate={{ maxHeight }}
+          exit={{ maxHeight: '30vh' }}
+          transition={{ duration: 0.8, ease: 'easeInOut' }}
         >
           <div className='w-14 pb-2 bg-[#35383F] mx-auto rounded-b-full' />
           <Header closed={closed} setClosed={setClosed} category={category} setCategory={setCategory} />
